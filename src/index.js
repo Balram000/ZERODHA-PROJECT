@@ -1,17 +1,53 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
+
 import HomePage from './landing_page/Home/HomePage';
-import { BrowserRouter } from 'react-router-dom';
+import About from './landing_page/About/AboutPage'
+import Signup from  './landing_page/signup/Signup.js'
+import Stats from './landing_page/Home/Stats';
+import Pricing from './landing_page/Home/Princing';
+import Support from './landing_page/support/CreateTicket.js'
+import Products from './landing_page/Products/Hero.js'
+ import Navbar from './landing_page/Navbar.js';
+ import Footer from './landing_page/Footer.js';
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  Outlet,
+  Route,
+  RouterProvider,
+} from 'react-router-dom';
 
+ function Layout() {
+  return (
+    <div>
+      <Navbar />
+      <Outlet />
+      <Footer />
+    </div>
+  );
+}
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route element={<Layout />}>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/stats" element={<Stats />} />
+      <Route path='/Pricing' element ={<Pricing />} />
+      <Route path="/signup" element={<Signup />} />
+      <Route path='/Support' element ={<Support />} />
+      <Route path='/Products' element ={<Products />} />
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <HomePage />
-    </BrowserRouter>
-  </React.StrictMode>
+    </Route>
+  )
 );
 
+const root = ReactDOM.createRoot(document.getElementById('root'));
 
+root.render(
+
+  <React.StrictMode>
+    <RouterProvider router={router} />
+  </React.StrictMode>
+);
