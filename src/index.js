@@ -7,8 +7,8 @@ import About from './landing_page/About/AboutPage'
 import Signup from  './landing_page/signup/Signup.js'
 import Stats from './landing_page/Home/Stats';
 import Pricing from './landing_page/Home/Princing';
-import Support from './landing_page/support/CreateTicket.js'
-import Products from './landing_page/Products/Hero.js'
+import Support from './landing_page/support/SupportPage.js'
+import Products from './landing_page/Products/ProductPage.js'
  import Navbar from './landing_page/Navbar.js';
  import Footer from './landing_page/Footer.js';
 import {
