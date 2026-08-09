@@ -1,10 +1,12 @@
 import React from 'react'
+import Hero from './Hero'
+import Team from './Team'
 
 const AboutPage = () => {
   return (
     <div>
-      <h1>About Us</h1>
-      <p>Welcome to our about page!</p>
+    <Hero />
+    <Team />
     </div>
   )
 }
