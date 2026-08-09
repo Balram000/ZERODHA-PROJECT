@@ -2,18 +2,18 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 
-const Princing = () => {
+const Pricing = () => {
   return (
     <div className='container m-20 flex '>
       
         <div className='w-1/3 m-20'>
-        <h1 className='mb-3 text-3xl font-bold'> Unbeatable princing</h1>
+        <h1 className='mb-3 text-3xl font-bold'> Unbeatable pricing</h1>
         <p> we pioneered the concept of discount broking and price transparency in India. Flat fees and no hidden char </p>
         <Link
-          to="/Princing"
+          to="/Pricing"
           className="flex items-center gap-2 text-blue-600 font-semibold hover:text-blue-800 mt-6"
         >
-          See princing
+          See pricing
           <ArrowRight size={18} />
           </Link>
         </div>
@@ -35,4 +35,4 @@ const Princing = () => {
   )
 }
 
-export default Princing
+export default Pricing

@@ -2,7 +2,7 @@ import React from 'react'
 import Hero from './Hero'
 import Awards from './Awards.js'
 import Stats from './Stats'
-import Princing from './Princing'
+import Pricing from './Princing'
 import Education from './Education'
 import OpenAccount from '../OpenAccount/OpenAccount'
 
@@ -12,7 +12,7 @@ const HomePage = () => {
       <Hero />
       <Awards />
       <Stats />
-      <Princing/>
+      <Pricing />
       <Education/>
       <OpenAccount/>
       
