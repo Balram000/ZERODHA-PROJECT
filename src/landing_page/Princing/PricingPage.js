@@ -1,9 +1,13 @@
 import React from 'react'
-
+import Brokerage from './Brokerage'
+import OpenAccount from '../OpenAccount/OpenAccount.js'
+import Hero from './Hero.js'
 const PricingPage = () => {
   return (
     <div>
-        <h1>PricingPage</h1>
+      <Hero />
+      <OpenAccount />
+      <Brokerage />
     </div>
   )
 }

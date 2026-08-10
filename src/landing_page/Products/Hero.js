@@ -3,14 +3,14 @@ import { ArrowRight } from 'lucide-react'
 
 const Hero = () => {
   return (
-    <div className="text-center p-9">
+    <div className="text-center p-9  ">
     <h1 className="text-3xl">Zerodha Products</h1>
   
     <h3 className="text-2xl p-3">
       Sleek, modern, and intuitive trading platforms
     </h3>
   
-    <div className="flex items-center justify-center gap-2">
+    <div className="flex items-center justify-center gap-2   pb-12 border-b">
       <p className="text-xl">Check out our</p>
   
       <a
