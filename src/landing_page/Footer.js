@@ -7,7 +7,7 @@ function Footer() {
 
       <div className="mx-auto grid max-w-6xl grid-cols-1 gap-10 px-6 py-12 sm:grid-cols-2 lg:grid-cols-4">
 
-        {/* Brand */}
+
         <div>
           <Link
             to="/"
@@ -25,7 +25,7 @@ function Footer() {
           </p>
         </div>
 
-        {/* Company */}
+
         <div>
           <h3 className="mb-4 text-base font-semibold text-gray-800">
             Company
@@ -50,7 +50,7 @@ function Footer() {
           </div>
         </div>
 
-        {/* Account */}
+
         <div>
           <h3 className="mb-4 text-base font-semibold text-gray-800">
             Account
@@ -71,7 +71,7 @@ function Footer() {
           </div>
         </div>
 
-        {/* Resources */}
+
         <div>
           <h3 className="mb-4 text-base font-semibold text-gray-800">
             Resources
@@ -98,7 +98,7 @@ function Footer() {
 
       </div>
 
-      {/* Bottom */}
+
       <div className="mx-auto max-w-6xl border-t border-gray-200 px-6 py-6">
         <p className="text-xs leading-6 text-gray-500">
           Investment in securities market are subject to market risks.

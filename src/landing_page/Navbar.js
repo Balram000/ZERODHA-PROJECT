@@ -53,7 +53,7 @@ function Navbar() {
           </li>
         </ul>
 
-        {/* Mobile Menu */}
+        
         <button className="md:hidden text-3xl">
           ☰
         </button>
