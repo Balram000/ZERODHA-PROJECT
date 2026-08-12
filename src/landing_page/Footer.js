@@ -98,7 +98,7 @@ function Footer() {
 
       </div>
 
-
+                                    jk7
       <div className="mx-auto max-w-6xl border-t border-gray-200 px-6 py-6">
         <p className="text-xs leading-6 text-gray-500">
           Investment in securities market are subject to market risks.
