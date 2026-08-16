@@ -6,8 +6,13 @@ const mongoose = require('mongoose');
 const { PositionSchema } = require("./Schema/PositionSchema");
 const PORT = process.env.PORT || 3002;
 const url = process.env.MONGODB_URL;
+const bodyparser =require('body-parser')
+const cors =require("cors")
 
 const app = express();
+
+app.use(cors())
+app.use(bodyparser.json());
 
 // app.get('/addholding' , async(req ,res ) => {
 //     let  holdings = [
