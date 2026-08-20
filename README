@@ -10,36 +10,71 @@ A full-stack web application that replicates core features of the **Zerodha stoc
 
 ---
 
-## 🚀 Features
+## Table of Contents
 
-- 🔐 **User Authentication** — Register, Login with JWT-based secure sessions
-- 📊 **Trading Dashboard** — View holdings, positions, and portfolio overview
-- 🛒 **Buy / Sell Orders** — Place and manage stock orders
-- 💼 **Portfolio Management** — Track P&L, current value, and invested amount
-- 📋 **Positions View** — Real-time positions tracking with context management
-- 🌐 **Landing Page** — Fully responsive Zerodha-inspired frontend UI
-
----
-
-## 🛠️ Tech Stack
-
-| Layer | Technology |
-|-------|------------|
-| Frontend | React.js, React Router, Axios, CSS |
-| Dashboard | React.js, Context API |
-| Backend | Node.js, Express.js |
-| Database | MongoDB, Mongoose |
-| Auth | JWT (JSON Web Tokens) |
-| HTTP Client | Axios |
+- [About](#about)
+- [Demo](#demo)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Quick Start](#quick-start)
+  - [Environment Variables](#environment-variables)
+- [API Reference](#api-reference)
+- [Development](#development)
+- [Contributing](#contributing)
+- [Author](#author)
+- [License & Disclaimer](#license--disclaimer)
 
 ---
 
-## 📂 Project Structure
+## About
+
+This repository contains a learning project that implements a simplified Zerodha-like trading platform. It is intended for educational use to demonstrate:
+
+- Building a full-stack MERN application
+- JWT-based authentication and protected API routes
+- State management in a trading dashboard using React Context
+- Basic order placement and holdings management
+
+This project is NOT affiliated with or endorsed by Zerodha.
+
+---
+
+## Demo
+
+*(Add links or screenshots here)*
+
+---
+
+## Features
+
+- 🔐 User registration and login with JWT
+- 📊 Trading Dashboard — overview of portfolio, holdings, and P&L
+- 🛒 Place Buy / Sell orders and view order history
+- 💼 Track holdings and open positions
+- 🌐 Responsive landing and dashboard UI
+- ⚙️ Role for future expansions: WebSocket/live price feed, order matching, and charting
+
+---
+
+## Tech Stack
+
+- Frontend: React, React Router, Axios, CSS
+- Dashboard: React + Context API
+- Backend: Node.js, Express
+- Database: MongoDB (Mongoose)
+- Auth: JWT (JSON Web Tokens)
+
+---
+
+## Project Structure
 
 ```
 ZERODHA-PROJECT/
 ├── backend/          # Node.js + Express REST API server
-│   ├── models/       # Mongoose schemas (User, Order, Holdings)
+│   ├── models/       # Mongoose schemas (User, Order, Holding)
 │   ├── routes/       # API route handlers
 │   ├── middleware/   # Auth middleware (JWT verification)
 │   └── index.js      # Server entry point
@@ -55,50 +90,40 @@ ZERODHA-PROJECT/
 │   │   ├── components/   # Navbar, Hero, Signup, etc.
 │   └── package.json
 │
-└── README.md
+└── README            # Project documentation (this file)
 ```
 
 ---
 
-## ⚙️ Getting Started
+## Getting Started
 
 ### Prerequisites
 
-- Node.js v18+
+- Node.js v18+ (recommend using nvm)
 - MongoDB (local or MongoDB Atlas)
-- npm
+- npm or yarn
 
-### 1. Clone the Repository
+### Quick Start
+
+1. Clone the repo
 
 ```bash
 git clone https://github.com/Balram000/ZERODHA-PROJECT.git
 cd ZERODHA-PROJECT
 ```
 
-### 2. Setup Backend
+2. Setup and run the backend
 
 ```bash
 cd backend
 npm install
-```
-
-Create a `.env` file in the `backend/` folder:
-
-```env
-PORT=3002
-MONGO_URL=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret_key
-```
-
-Start the backend server:
-
-```bash
+# create .env according to the example below
 npm start
 ```
 
-Backend runs on: `http://localhost:3002`
+Backend default: http://localhost:3002
 
-### 3. Setup Dashboard
+3. Setup and run the dashboard
 
 ```bash
 cd ../dashboard
@@ -106,9 +131,9 @@ npm install
 npm start
 ```
 
-Dashboard runs on: `http://localhost:3001`
+Dashboard default: http://localhost:3001
 
-### 4. Setup Frontend
+4. Setup and run the frontend
 
 ```bash
 cd ../frontend
@@ -116,44 +141,86 @@ npm install
 npm start
 ```
 
-Frontend runs on: `http://localhost:3000`
+Frontend default: http://localhost:3000
 
 ---
 
-## 🔗 API Endpoints
+### Environment Variables (backend/.env)
+
+Create a `.env` file in the `backend/` folder with the following keys:
+
+```env
+PORT=3002
+MONGO_URL=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret_key
+# Optional:
+# CORS_ORIGIN=http://localhost:3000
+```
+
+---
+
+## API Reference
+
+All backend endpoints are prefixed with `/api`.
 
 ### Auth
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| POST | `/api/auth/register` | Register new user |
-| POST | `/api/auth/login` | Login and get JWT token |
+| POST | `/api/auth/register` | Register new user — body: { name, email, password }
+| POST | `/api/auth/login` | Login and get JWT — body: { email, password }
+
+Example (curl):
+
+```bash
+curl -X POST http://localhost:3002/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"user@example.com","password":"password123"}'
+```
 
 ### Orders
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/api/orders` | Get all orders |
-| POST | `/api/orders/new` | Place a new order |
+| GET | `/api/orders` | Get all user orders (requires auth) |
+| POST | `/api/orders/new` | Place a new order — body: { symbol, type: 'buy'|'sell', quantity, price? }
 
 ### Holdings & Positions
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/api/holdings` | Get user holdings |
-| GET | `/api/positions` | Get current positions |
+| GET | `/api/holdings` | Get user holdings (requires auth) |
+| GET | `/api/positions` | Get current positions (requires auth) |
+
+Authentication: send `Authorization: Bearer <JWT_TOKEN>` header for protected routes.
 
 ---
 
-## 📸 Screenshots
+## Development
 
-> *(Add screenshots of your dashboard and landing page here)*
+- Use Postman or curl to test API endpoints.
+- Add a price feed or mock price service for portfolio calculations.
+- To add unit tests, we recommend Jest for backend and React Testing Library for frontend.
 
 ---
 
-## 🙋‍♂️ Author
+## Contributing
+
+Contributions are welcome. Suggested workflow:
+
+1. Fork the repository
+2. Create a feature branch (git checkout -b feat/my-feature)
+3. Commit changes and push
+4. Create a pull request with a clear description of changes
+
+Please keep commits focused and add tests where applicable.
+
+---
+
+## Author
 
 **Balram Sardar**
+
 B.Tech CSE Student | Full Stack MERN Developer
 
 - GitHub: [@Balram000](https://github.com/Balram000)
@@ -162,6 +229,6 @@ B.Tech CSE Student | Full Stack MERN Developer
 
 ---
 
-## 📜 License
+## License & Disclaimer
 
-This project is for educational purposes only. Zerodha™ is a registered trademark of Zerodha Broking Ltd.
+This project is for educational purposes only. Zerodha™ is a registered trademark of Zerodha Broking Ltd. Do not use this project for real trading or financial advice.
