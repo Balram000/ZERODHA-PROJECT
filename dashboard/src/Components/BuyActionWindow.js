@@ -1,29 +1,30 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-
 import axios from "axios";
-
-import GeneralContext from "./GeneralContext";
 import "./BuyActionWindow.css";
 
-
-const BuyActionWindow = ({ uid }) => {
+const BuyActionWindow = ({ uid, mode, closeBuyWindow }) => {
   const [stockQuantity, setStockQuantity] = useState(1);
   const [stockPrice, setStockPrice] = useState(0.0);
 
-  const handleBuyClick = () => {
-    axios.post("http://localhost:3002/newOrder", {
-      name: uid,
-      qty: stockQuantity,
-      price: stockPrice,
-      mode: "BUY",
-    });
-
-    GeneralContext.closeBuyWindow();
+  const handleOrderClick = () => {
+    axios
+      .post("http://localhost:3002/orders", {
+        name: uid,
+        quantity: Number(stockQuantity),
+        price: Number(stockPrice),
+        mode: mode,
+      })
+      .then((response) => {
+        console.log("Order placed:", response.data);
+        closeBuyWindow();
+      })
+      .catch((error) => {
+        console.log("Order error:", error);
+      });
   };
 
   const handleCancelClick = () => {
-    GeneralContext.closeBuyWindow();
+    closeBuyWindow();
   };
 
   return (
@@ -32,37 +33,56 @@ const BuyActionWindow = ({ uid }) => {
         <div className="inputs">
           <fieldset>
             <legend>Qty.</legend>
+
             <input
               type="number"
               name="qty"
               id="qty"
-              onChange={(e) => setStockQuantity(e.target.value)}
+              min="1"
               value={stockQuantity}
+              onChange={(e) => setStockQuantity(e.target.value)}
             />
           </fieldset>
+
           <fieldset>
             <legend>Price</legend>
+
             <input
               type="number"
               name="price"
               id="price"
               step="0.05"
-              onChange={(e) => setStockPrice(e.target.value)}
+              min="0"
               value={stockPrice}
+              onChange={(e) => setStockPrice(e.target.value)}
             />
           </fieldset>
         </div>
       </div>
 
       <div className="buttons">
-        <span>Margin required ₹140.65</span>
+        <span>
+          Margin required ₹140.65
+        </span>
+
         <div>
-          <Link className="btn btn-blue" onClick={handleBuyClick}>
-            Buy
-          </Link>
-          <Link to="" className="btn btn-grey" onClick={handleCancelClick}>
+          <button
+            type="button"
+            className={`btn ${
+              mode === "BUY" ? "btn-blue" : "btn-red"
+            }`}
+            onClick={handleOrderClick}
+          >
+            {mode}
+          </button>
+
+          <button
+            type="button"
+            className="btn btn-grey"
+            onClick={handleCancelClick}
+          >
             Cancel
-          </Link>
+          </button>
         </div>
       </div>
     </div>
