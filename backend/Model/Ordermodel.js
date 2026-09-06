@@ -1,5 +1,7 @@
-const {model} =require('mongoose')
+const { model } = require("mongoose");
 
- const { watchlistSchema, WatchlistSchema} =require ('../Schema/OrderSchema')
+const { OrderSchema } = require("../Schema/OrderSchema");
 
- const WacthlistModel = new model ('Watchlsit' ,WatchlistSchema)
+const OrderModel = new model("Order", OrderSchema);
+
+module.exports = { OrderModel };
