@@ -4,82 +4,121 @@ import { Link } from "react-router-dom";
 const Funds = () => {
   return (
     <>
+      {/* Funds Header */}
       <div className="funds">
-        <p>Instant, zero-cost fund transfers with UPI </p>
-        <Link className="btn btn-green">Add funds</Link>
-        <Link className="btn btn-blue">Withdraw</Link>
+        <div>
+          <h3>Funds</h3>
+          <p>Instant, zero-cost fund transfers with UPI</p>
+        </div>
+
+        <div className="fund-actions">
+          <Link to="/funds" className="btn btn-green">
+            Add funds
+          </Link>
+
+          <Link to="/funds" className="btn btn-blue">
+            Withdraw
+          </Link>
+        </div>
       </div>
 
-      <div className="row">
-        <div className="col">
-          <span>
-            <p>Equity</p>
-          </span>
+      {/* Funds Content */}
+      <div className="row funds-row">
 
-          <div className="table">
+        {/* Equity */}
+        <div className="col funds-col">
+          <h4>Equity</h4>
+
+          <div className="table funds-table">
+
+            {/* Main Balance */}
             <div className="data">
               <p>Available margin</p>
-              <p className="imp colored">4,043.10</p>
+              <p className="imp colored">₹4,043.10</p>
             </div>
+
             <div className="data">
               <p>Used margin</p>
-              <p className="imp">3,757.30</p>
+              <p className="imp">₹3,757.30</p>
             </div>
+
             <div className="data">
               <p>Available cash</p>
-              <p className="imp">4,043.10</p>
+              <p className="imp">₹4,043.10</p>
             </div>
+
             <hr />
+
+            {/* Account Details */}
             <div className="data">
-              <p>Opening Balance</p>
-              <p>4,043.10</p>
+              <p>Opening balance</p>
+              <p>₹4,043.10</p>
             </div>
-            <div className="data">
-              <p>Opening Balance</p>
-              <p>3736.40</p>
-            </div>
+
             <div className="data">
               <p>Payin</p>
-              <p>4064.00</p>
+              <p>₹3,736.40</p>
             </div>
+
+            <div className="data">
+              <p>Payout</p>
+              <p>₹4,064.00</p>
+            </div>
+
             <div className="data">
               <p>SPAN</p>
-              <p>0.00</p>
+              <p>₹0.00</p>
             </div>
+
             <div className="data">
               <p>Delivery margin</p>
-              <p>0.00</p>
+              <p>₹0.00</p>
             </div>
+
             <div className="data">
               <p>Exposure</p>
-              <p>0.00</p>
+              <p>₹0.00</p>
             </div>
+
             <div className="data">
               <p>Options premium</p>
-              <p>0.00</p>
+              <p>₹0.00</p>
             </div>
+
             <hr />
+
+            {/* Collateral */}
             <div className="data">
               <p>Collateral (Liquid funds)</p>
-              <p>0.00</p>
+              <p>₹0.00</p>
             </div>
+
             <div className="data">
               <p>Collateral (Equity)</p>
-              <p>0.00</p>
+              <p>₹0.00</p>
             </div>
-            <div className="data">
-              <p>Total Collateral</p>
-              <p>0.00</p>
+
+            <div className="data total-row">
+              <p>Total collateral</p>
+              <p>₹0.00</p>
             </div>
+
           </div>
         </div>
 
-        <div className="col">
+        {/* Commodity */}
+        <div className="col funds-col">
           <div className="commodity">
+            <h4>Commodity</h4>
+
             <p>You don't have a commodity account</p>
-            <Link className="btn btn-blue">Open Account</Link>
+
+            <Link to="/funds" className="btn btn-blue">
+              Open Account
+            </Link>
           </div>
         </div>
+
       </div>
     </>
   );

@@ -28,54 +28,160 @@ code {
   padding: 3% 2%;
 }
 
+/* =========================
+   FUNDS PAGE
+========================= */
+
 .funds {
-  width: 100%;
-  text-align: right;
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: flex-end;
+  padding: 30px 40px;
+  border-bottom: 1px solid #eee;
+}
+
+.funds h3 {
+  margin: 0 0 8px;
+  font-size: 20px;
+  font-weight: 500;
 }
 
 .funds p {
-  font-size: 0.8rem;
-  color: rgb(179, 179, 179);
-  margin-right: 8px;
+  margin: 0;
+  color: #777;
+  font-size: 14px;
+}
+
+.fund-actions {
+  display: flex;
+  gap: 12px;
 }
 
 .btn {
-  text-decoration: none;
+  display: inline-block;
   padding: 10px 20px;
-  border-radius: 2px;
-  color: #fff;
-  margin-right: 2px;
-  margin-left: 2px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 14px;
+  transition: 0.2s ease;
 }
 
 .btn-green {
-  background: #4caf50;
+  background: #387ed1;
+  color: white;
 }
 
 .btn-blue {
-  background: #4184f3;
+  background: #387ed1;
+  color: white;
 }
 
-.row {
-  width: 100%;
+.btn:hover {
+  opacity: 0.9;
+}
+
+/* =========================
+   CONTENT
+========================= */
+
+.funds-row {
   display: flex;
-  align-items: center;
-  justify-content: space-evenly;
-  margin-top: 5%;
+  gap: 50px;
+  padding: 35px 40px;
 }
 
-.col {
-  flex-basis: 48%;
-  text-align: left;
+.funds-col {
+  flex: 1;
 }
 
-.col span {
+.funds-col h4 {
+  margin: 0 0 18px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #444;
+}
+
+/* =========================
+   EQUITY TABLE
+========================= */
+
+.funds-table {
+  max-width: 600px;
+  border: 1px solid #eee;
+  border-radius: 6px;
+  padding: 20px 25px;
+  background: #fff;
+}
+
+.data {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  margin-bottom: 2%;
+  min-height: 42px;
+}
+
+.data p {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.data p:last-child {
+  color: #333;
+  font-weight: 400;
+}
+
+.data .imp {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.data .colored {
+  color: #387ed1;
+}
+
+.funds-table hr {
+  border: 0;
+  border-top: 1px solid #eee;
+  margin: 15px 0;
+}
+
+.total-row {
+  border-top: 1px solid #eee;
+  margin-top: 8px;
+  padding-top: 8px;
+}
+
+.total-row p {
+  font-weight: 500;
+}
+
+/* =========================
+   COMMODITY
+========================= */
+
+.commodity {
+  min-height: 230px;
+  border: 1px solid #eee;
+  border-radius: 6px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  padding: 30px;
+  text-align: center;
+}
+
+.commodity h4 {
+  margin-bottom: 15px;
+}
+
+.commodity p {
+  color: #777;
+  font-size: 14px;
+  margin-bottom: 20px;
 }
 
 .section-icon {
