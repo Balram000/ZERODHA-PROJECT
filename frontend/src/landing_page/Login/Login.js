@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Signup = () => {
+const Login = () => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    name: "",
     email: "",
     password: "",
   });
@@ -22,12 +21,13 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     setMessage("");
     setLoading(true);
 
     try {
       const response = await fetch(
-        "http://localhost:3002/api/auth/register",
+        "http://localhost:3002/api/auth/login",
         {
           method: "POST",
           headers: {
@@ -40,14 +40,20 @@ const Signup = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Registration failed");
+        throw new Error(data.message || "Login failed");
       }
 
-      setMessage("Account created successfully!");
+      // Save JWT
+      localStorage.setItem("token", data.token);
+
+      // Save user
+      localStorage.setItem("user", JSON.stringify(data.user));
+
+      setMessage("Login successful!");
 
       setTimeout(() => {
-        navigate("/login");
-      }, 1000);
+        navigate("/dashboard");
+      }, 700);
     } catch (error) {
       setMessage(error.message);
     } finally {
@@ -82,7 +88,7 @@ const Signup = () => {
             marginBottom: "10px",
           }}
         >
-          Create your account
+          Welcome back
         </h1>
 
         <p
@@ -92,7 +98,7 @@ const Signup = () => {
             marginBottom: "30px",
           }}
         >
-          Start your investing journey with Zerodha
+          Login to your Zerodha account
         </p>
 
         <div
@@ -101,32 +107,20 @@ const Signup = () => {
             borderRadius: "8px",
             padding: "32px",
             textAlign: "left",
-            boxShadow: "0 4px 20px rgba(0,0,0,0.04)",
+            boxShadow: "0 4px 20px rgba(0, 0, 0, 0.04)",
           }}
         >
           <form onSubmit={handleSubmit}>
-            <label>Full name</label>
-
-            <input
-              type="text"
-              name="name"
-              placeholder="Enter your full name"
-              value={formData.name}
-              onChange={handleChange}
-              required
+            <label
               style={{
-                width: "100%",
-                boxSizing: "border-box",
-                padding: "13px",
-                marginTop: "8px",
-                marginBottom: "20px",
-                border: "1px solid #ddd",
-                borderRadius: "4px",
+                display: "block",
+                color: "#424242",
                 fontSize: "14px",
+                marginBottom: "8px",
               }}
-            />
-
-            <label>Email</label>
+            >
+              Email
+            </label>
 
             <input
               type="email"
@@ -139,33 +133,41 @@ const Signup = () => {
                 width: "100%",
                 boxSizing: "border-box",
                 padding: "13px",
-                marginTop: "8px",
                 marginBottom: "20px",
                 border: "1px solid #ddd",
                 borderRadius: "4px",
                 fontSize: "14px",
+                outline: "none",
               }}
             />
 
-            <label>Password</label>
+            <label
+              style={{
+                display: "block",
+                color: "#424242",
+                fontSize: "14px",
+                marginBottom: "8px",
+              }}
+            >
+              Password
+            </label>
 
             <input
               type="password"
               name="password"
-              placeholder="Minimum 6 characters"
+              placeholder="Enter your password"
               value={formData.password}
               onChange={handleChange}
-              minLength={6}
               required
               style={{
                 width: "100%",
                 boxSizing: "border-box",
                 padding: "13px",
-                marginTop: "8px",
                 marginBottom: "24px",
                 border: "1px solid #ddd",
                 borderRadius: "4px",
                 fontSize: "14px",
+                outline: "none",
               }}
             />
 
@@ -175,15 +177,16 @@ const Signup = () => {
               style={{
                 width: "100%",
                 padding: "13px",
-                background: "#387ed1",
+                background: loading ? "#8db9e8" : "#387ed1",
                 color: "#fff",
                 border: "none",
                 borderRadius: "4px",
                 fontSize: "15px",
-                cursor: "pointer",
+                fontWeight: "500",
+                cursor: loading ? "not-allowed" : "pointer",
               }}
             >
-              {loading ? "Creating account..." : "Sign up"}
+              {loading ? "Logging in..." : "Login"}
             </button>
           </form>
 
@@ -192,7 +195,7 @@ const Signup = () => {
               style={{
                 textAlign: "center",
                 marginTop: "18px",
-                color: message.includes("success")
+                color: message.includes("successful")
                   ? "#2e7d32"
                   : "#d32f2f",
                 fontSize: "14px",
@@ -210,16 +213,16 @@ const Signup = () => {
               fontSize: "14px",
             }}
           >
-            Already have an account?{" "}
+            Don't have an account?{" "}
             <span
-              onClick={() => navigate("/login")}
+              onClick={() => navigate("/signup")}
               style={{
                 color: "#387ed1",
                 cursor: "pointer",
                 fontWeight: "500",
               }}
             >
-              Login
+              Sign up
             </span>
           </p>
         </div>
@@ -228,4 +231,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default Login;
