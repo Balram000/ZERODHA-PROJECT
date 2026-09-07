@@ -1,57 +1,76 @@
-import React from "react";
-//import { holdings } from "../Data/Data";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
-import { useState,useEffect } from "react";
-import axios from'axios'
 const Positions = () => {
-  
-  const [allposition ,setallposition] =useState([]);
-  useEffect(() =>{
-axios.get("http://localhost:3002/allPosition").then((res) =>{
- // console.log(res.data);
-  
-  setallposition(res.data)})
-}
-)
+  const [allPosition, setAllPosition] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:3002/allPosition")
+      .then((res) => {
+        console.log("POSITIONS:", res.data);
+        setAllPosition(res.data);
+      })
+      .catch((error) => {
+        console.log("Error fetching positions:", error);
+      });
+  }, []);
+
   return (
     <>
-      <h3 className="title">Positions (2)</h3>
+      <h3 className="title">
+        Positions ({allPosition.length})
+      </h3>
 
       <div className="order-table">
         <table>
-          <tr>
-            <th>Product</th>
-            <th>Instrument</th>
-            <th>Qty.</th>
-            <th>Avg.</th>
-            <th>LTP</th>
-            <th>P&L</th>
-            <th>Chg.</th>
-          </tr>
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Instrument</th>
+              <th>Qty.</th>
+              <th>Avg.</th>
+              <th>LTP</th>
+              <th>P&L</th>
+              <th>Chg.</th>
+            </tr>
+          </thead>
 
-          {allposition.map((stock, index) => {
-            var curValue = stock.price + stock.qty;
-            const isProfit = curValue - stock.avg * stock.qtyn >= 0.0;
-            const profitclass = isProfit ? 'profit' : 'loss';
-            const dayclass = stock.isLoss ? 'loss' : 'profit';
-            return (
+          <tbody>
+            {allPosition.map((stock) => {
+              const qty = Number(stock.qty);
+              const avg = Number(stock.avg);
+              const price = Number(stock.price);
 
-              <tr key={index} >
-                <td>{stock.product}</td>
-                <td>{stock.name}</td>
-                <td>{stock.qty}</td>
-                <td>{stock.avg.toFixed(2)}</td>
-                <td>{stock.price.toFixed(2)}</td>
-                <td className={profitclass} >
-                  {(curValue = stock.price + stock.qty).toFixed(2)}
-                </td>
-               
-                <td className={dayclass} >{stock.day}</td>
-              </tr>
+              const profitLoss = (price - avg) * qty;
 
-            );
+              const profitClass =
+                profitLoss >= 0 ? "profit" : "loss";
 
-          })}
+              const dayClass =
+                stock.day && stock.day.startsWith("-")
+                  ? "loss"
+                  : "profit";
+
+              return (
+                <tr key={stock._id}>
+                  <td>{stock.product}</td>
+                  <td>{stock.name}</td>
+                  <td>{qty}</td>
+                  <td>₹{avg.toFixed(2)}</td>
+                  <td>₹{price.toFixed(2)}</td>
+
+                  <td className={profitClass}>
+                    ₹{profitLoss.toFixed(2)}
+                  </td>
+
+                  <td className={dayClass}>
+                    {stock.day}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
         </table>
       </div>
     </>

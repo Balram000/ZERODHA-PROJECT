@@ -143,45 +143,41 @@ app.use(bodyparser.json());
 // })
 //
 
-// app.get('/addposition', async (req, res) => {
-//     let position = [
-//         {
-//             product: "CNC",
-//             name: "EVEREADY",
-//             qty: 2,
-//             avg: 316.27,
-//             price: 312.35,
-//             net: "+0.58%",
-//             day: "-1.24%",
-
-//         },
-//         {
-//             product: "CNC",
-//             name: "JUBLFOOD",
-//             qty: 1,
-//             avg: 3124.75,
-//             price: 3082.65,
-//             net: "+10.04%",
-//             day: "-1.35%",
-
-//         },
-//     ];
-//     position.forEach((item) => {
-//         let newposition = new positionModel({
-
-//             product: item.product,
-//             name: item.name,
-//             avg: item.avg,
-//             price: item.price,
-//             net: item.net,
-//             day: item.day,
 
 
-//         })
-//         newposition.save();
-//     })
-//     res.send('Done')
-// })
+app.get("/addposition", async (req, res) => {
+  try {
+    const position = [
+      {
+        product: "CNC",
+        name: "EVEREADY",
+        qty: 2,
+        avg: 316.27,
+        price: 312.35,
+        net: "+0.58%",
+        day: "-1.24%",
+      },
+      {
+        product: "CNC",
+        name: "JUBLFOOD",
+        qty: 1,
+        avg: 3124.75,
+        price: 3082.65,
+        net: "+10.04%",
+        day: "-1.35%",
+      },
+    ];
+
+
+    // Naya data add
+    await positionModel.insertMany(position);
+
+    res.send("Positions added successfully");
+  } catch (error) {
+    console.log("Position error:", error);
+    res.status(500).send("Failed to add positions");
+  }
+});
 
 
 app.get('/allHolding' ,async(req,res) =>{
