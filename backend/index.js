@@ -1,6 +1,7 @@
 const express = require("express")
 const { holdingModel } = require('./Model/HoldingModel')
 const { positionModel } = require("./Model/PositionModel");
+const { appModel } = require("./Model/Appmodel.js");
 require('dotenv').config();
 const mongoose = require('mongoose');
 const { PositionSchema } = require("./Schema/PositionSchema");
@@ -9,142 +10,12 @@ const url = process.env.MONGODB_URL;
 const bodyparser =require('body-parser')
 const cors =require("cors")
 const { OrderModel } = require("./Model/Ordermodel");
-
+ 
 const app = express();
-
+ 
 app.use(cors())
 app.use(bodyparser.json());
-
-// app.get('/addholding' , async(req ,res ) => {
-//     let  holdings = [
-//         {
-//           name: "BHARTIARTL",
-//           qty: 2,
-//           avg: 538.05,
-//           price: 541.15,
-//           net: "+0.58%",
-//           day: "+2.99%",
-//         },
-//         {
-//           name: "HDFCBANK",
-//           qty: 2,
-//           avg: 1383.4,
-//           price: 1522.35,
-//           net: "+10.04%",
-//           day: "+0.11%",
-//         },
-//         {
-//           name: "HINDUNILVR",
-//           qty: 1,
-//           avg: 2335.85,
-//           price: 2417.4,
-//           net: "+3.49%",
-//           day: "+0.21%",
-//         },
-//         {
-//           name: "INFY",
-//           qty: 1,
-//           avg: 1350.5,
-//           price: 1555.45,
-//           net: "+15.18%",
-//           day: "-1.60%",
-//           isLoss: true,
-//         },
-//         {
-//           name: "ITC",
-//           qty: 5,
-//           avg: 202.0,
-//           price: 207.9,
-//           net: "+2.92%",
-//           day: "+0.80%",
-//         },
-//         {
-//           name: "KPITTECH",
-//           qty: 5,
-//           avg: 250.3,
-//           price: 266.45,
-//           net: "+6.45%",
-//           day: "+3.54%",
-//         },
-//         {
-//           name: "M&M",
-//           qty: 2,
-//           avg: 809.9,
-//           price: 779.8,
-//           net: "-3.72%",
-//           day: "-0.01%",
-//           isLoss: true,
-//         },
-//         {
-//           name: "RELIANCE",
-//           qty: 1,
-//           avg: 2193.7,
-//           price: 2112.4,
-//           net: "-3.71%",
-//           day: "+1.44%",
-//         },
-//         {
-//           name: "SBIN",
-//           qty: 4,
-//           avg: 324.35,
-//           price: 430.2,
-//           net: "+32.63%",
-//           day: "-0.34%",
-//           isLoss: true,
-//         },
-//         {
-//           name: "SGBMAY29",
-//           qty: 2,
-//           avg: 4727.0,
-//           price: 4719.0,
-//           net: "-0.17%",
-//           day: "+0.15%",
-//         },
-//         {
-//           name: "TATAPOWER",
-//           qty: 5,
-//           avg: 104.2,
-//           price: 124.15,
-//           net: "+19.15%",
-//           day: "-0.24%",
-//           isLoss: true,
-//         },
-//         {
-//           name: "TCS",
-//           qty: 1,
-//           avg: 3041.7,
-//           price: 3194.8,
-//           net: "+5.03%",
-//           day: "-0.25%",
-//           isLoss: true,
-//         },
-//         {
-//           name: "WIPRO",
-//           qty: 4,
-//           avg: 489.3,
-//           price: 577.75,
-//           net: "+18.08%",
-//           day: "+0.32%",
-//         },
-//       ];
-//       holdings.forEach((item) => {
-//         let newHolding = new  holdingModel ({
-
-//             name: item.name,
-//             qty: item.qty,
-//             avg: item.avg,
-//             price: item.price,
-//             net:  item.net,
-//             day: item.day, 
-//         })
-//         newHolding.save();
-//       })
-//       res.send('Done')
-// })
-//
-
-
-
+ 
 app.get("/addposition", async (req, res) => {
   try {
     const position = [
@@ -167,31 +38,60 @@ app.get("/addposition", async (req, res) => {
         day: "-1.35%",
       },
     ];
-
-
-    // Naya data add
+ 
     await positionModel.insertMany(position);
-
+ 
     res.send("Positions added successfully");
   } catch (error) {
     console.log("Position error:", error);
     res.status(500).send("Failed to add positions");
   }
 });
-
-
+ 
+ 
 app.get('/allHolding' ,async(req,res) =>{
     let allHolding =await holdingModel.find({})
     res.json(allHolding)
 })
-
+ 
 app.get('/allPosition' ,async(req,res) =>{
     let allPosition =await positionModel.find({})
     res.json(allPosition)
 })
-
-
-  app.post("/orders", async (req, res) => {
+ 
+// =========================
+// APPS — seed + fetch
+// =========================
+app.get("/addapps", async (req, res) => {
+  try {
+    const apps = [
+      { name: "Console", tagline: "Your account, one dashboard", description: "Track holdings, funds, reports and account settings in a single backoffice view.", accent: "#5B6B79", tint: "#EEF1F3", initial: "C", order: 1 },
+      { name: "Coin", tagline: "Direct mutual funds", description: "Invest in direct mutual funds at zero commission and build long-term wealth.", accent: "#2E8B57", tint: "#EAF5EF", initial: "Co", order: 2 },
+      { name: "Kite", tagline: "Trading, simplified", description: "Fast, clean trading terminal for equity, F&O, currency and commodity markets.", accent: "#387ED1", tint: "#EAF2FB", initial: "K", order: 3 },
+      { name: "Varsity", tagline: "Learn the markets", description: "Free structured modules that take you from the basics to advanced trading.", accent: "#D97B29", tint: "#FBF1E7", initial: "V", order: 4 },
+      { name: "TradingView", tagline: "Advanced charting", description: "Professional-grade charts and technical analysis tools built into Kite.", accent: "#131722", tint: "#ECEDEF", initial: "T", order: 5 },
+    ];
+ 
+    await appModel.insertMany(apps);
+    res.send("Apps added successfully");
+  } catch (error) {
+    console.log("App seed error:", error);
+    res.status(500).send("Failed to add apps");
+  }
+});
+ 
+app.get("/allApps", async (req, res) => {
+  try {
+    let allApps = await appModel.find({}).sort({ order: 1 });
+    res.json(allApps);
+  } catch (error) {
+    console.log("Fetch apps error:", error);
+    res.status(500).json({ message: "Failed to fetch apps" });
+  }
+});
+ 
+ 
+app.post("/orders", async (req, res) => {
     try {
       const { name, price, quantity, mode } = req.body;
   
@@ -216,9 +116,6 @@ app.get('/allPosition' ,async(req,res) =>{
         });
       }
   
-      
-      // BUY → HOLDING UPDATE
-      
       if (mode === "BUY") {
         const holding = await holdingModel.findOne({ name });
   
@@ -248,9 +145,6 @@ app.get('/allPosition' ,async(req,res) =>{
         }
       }
   
-    
-      // SELL → HOLDING UPDATE
-    
       if (mode === "SELL") {
         const holding = await holdingModel.findOne({ name });
   
@@ -269,7 +163,6 @@ app.get('/allPosition' ,async(req,res) =>{
         holding.qty = Number(holding.qty) - qty;
         holding.price = orderPrice;
   
-        // qty 0 → holding delete
         if (holding.qty === 0) {
           await holdingModel.deleteOne({
             _id: holding._id,
@@ -279,9 +172,6 @@ app.get('/allPosition' ,async(req,res) =>{
         }
       }
   
-      // =========================
-      // SAVE ORDER
-      // =========================
       const newOrder = new OrderModel({
         name: name,
         price: orderPrice,
@@ -306,10 +196,6 @@ app.get('/allPosition' ,async(req,res) =>{
   });
   
   
-  // =========================
-  // GET ALL ORDERS
-  // =========================
-  
   app.get("/orders", async (req, res) => {
     try {
       const orders = await OrderModel.find({});
@@ -323,10 +209,9 @@ app.get('/allPosition' ,async(req,res) =>{
       });
     }
   });
+ 
 app.listen(PORT, () => {
     console.log('app started ')
     mongoose.connect(url)
     console.log(' db conected')
-
-
 })

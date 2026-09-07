@@ -1,8 +1,6 @@
-import mongoose from "mongoose";
-import dotenv from "dotenv";
-import { App } from "./apps.model.js";
- 
-dotenv.config();
+const mongoose = require("mongoose");
+require("dotenv").config();
+const App = require("./models/App");
  
 const apps = [
   {
@@ -54,7 +52,7 @@ const apps = [
  
 const seed = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI);
+    await mongoose.connect(process.env.MONGO_URL);
     await App.deleteMany();
     await App.insertMany(apps);
     console.log("Apps seeded successfully");
