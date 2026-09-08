@@ -12,8 +12,8 @@ import Products from './landing_page/Products/ProductPage.js'
 import Navbar from './landing_page/Navbar.js';
 import Footer from './landing_page/Footer.js';
 import Login from './landing_page/Login/Login.js';
-import ProtectedRoute from "./ProtectedRoute";
-import Dashboard from './landing_page/Dashboard/Dashboard.js';
+//import ProtectedRoute from "./ProtectedRoute";
+//import Dashboard from './landing_page/Dashboard/Dashboard.js';
 
 import {
   createBrowserRouter,
@@ -43,7 +43,7 @@ const router = createBrowserRouter(
       <Route path="/login" element={<Login />} />
       <Route path='/Support' element={<Support />} />
       <Route path='/Products' element={<Products />} />
-      <Route path="/protected" element={<ProtectedRoute> <Dashboard /> </ProtectedRoute>} />
+      
 
     </Route>
   )

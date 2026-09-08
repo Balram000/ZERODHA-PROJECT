@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -5,22 +6,40 @@ const Positions = () => {
   const [allPosition, setAllPosition] = useState([]);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3002/allPosition")
-      .then((res) => {
-        console.log("POSITIONS:", res.data);
-        setAllPosition(res.data);
-      })
-      .catch((error) => {
-        console.log("Error fetching positions:", error);
-      });
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      // Login hai → only logged-in user's positions
+      axios
+        .get("http://localhost:3002/api/positions", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          console.log("USER POSITIONS:", res.data);
+          setAllPosition(res.data.positions);
+        })
+        .catch((err) => {
+          console.log("Error fetching user positions:", err);
+        });
+    } else {
+      // Login nahi → all positions
+      axios
+        .get("http://localhost:3002/api/allPosition")
+        .then((res) => {
+          console.log("ALL POSITIONS:", res.data);
+          setAllPosition(res.data);
+        })
+        .catch((err) => {
+          console.log("Error fetching all positions:", err);
+        });
+    }
   }, []);
 
   return (
     <>
-      <h3 className="title">
-        Positions ({allPosition.length})
-      </h3>
+      <h3 className="title">Positions ({allPosition.length})</h3>
 
       <div className="order-table">
         <table>
@@ -37,39 +56,25 @@ const Positions = () => {
           </thead>
 
           <tbody>
-            {allPosition.map((stock) => {
-              const qty = Number(stock.qty);
-              const avg = Number(stock.avg);
-              const price = Number(stock.price);
+            {allPosition.map((stock, index) => (
+              <tr key={stock._id || index}>
+                <td>{stock.product}</td>
+                <td>{stock.name}</td>
+                <td>{stock.qty}</td>
+                <td>₹{stock.avg}</td>
+                <td>₹{stock.price}</td>
 
-              const profitLoss = (price - avg) * qty;
+                <td className={stock.net >= 0 ? "profit" : "loss"}>
+                  {stock.net >= 0 ? "+" : ""}
+                  {stock.net}
+                </td>
 
-              const profitClass =
-                profitLoss >= 0 ? "profit" : "loss";
-
-              const dayClass =
-                stock.day && stock.day.startsWith("-")
-                  ? "loss"
-                  : "profit";
-
-              return (
-                <tr key={stock._id}>
-                  <td>{stock.product}</td>
-                  <td>{stock.name}</td>
-                  <td>{qty}</td>
-                  <td>₹{avg.toFixed(2)}</td>
-                  <td>₹{price.toFixed(2)}</td>
-
-                  <td className={profitClass}>
-                    ₹{profitLoss.toFixed(2)}
-                  </td>
-
-                  <td className={dayClass}>
-                    {stock.day}
-                  </td>
-                </tr>
-              );
-            })}
+                <td className={stock.day >= 0 ? "profit" : "loss"}>
+                  {stock.day >= 0 ? "+" : ""}
+                  {stock.day}%
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>

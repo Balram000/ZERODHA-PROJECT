@@ -20,9 +20,9 @@ app.use(bodyparser.json());
  
  app.use("/api/auth", authRoute);
 
-app.use("/api/holdings", holding);
+app.use("/api/", holding);
 // positions
-app.use("/api/positions", Postion);
+app.use("/api", Postion);
 
 // APPS — seed + fetch
 

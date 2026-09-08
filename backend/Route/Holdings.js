@@ -4,7 +4,16 @@ const router = express.Router();
 const { holdingModel } = require("../Model/HoldingModel");
 const authMiddleware = require("../middleware/authMiddleware");
 
-router.get("/", authMiddleware, async (req, res) => {
+router.get("/allHolding", async (req, res) => {
+  try {
+    const holdings = await holdingModel.find({});
+    res.status(200).json(holdings);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch holdings" });
+  }
+});
+
+router.get("/userholding", authMiddleware, async (req, res) => {
   try {
     const holdings = await holdingModel.find({
       userId: req.user.userId,

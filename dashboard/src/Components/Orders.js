@@ -1,21 +1,31 @@
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetch("http://localhost:3002/orders")
-      .then((res) => res.json())
-      .then((data) => {
-        setOrders(data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.log("Error fetching orders:", error);
-        setLoading(false);
-      });
-  }, []);
+  const token = localStorage.getItem("token");
+
+  fetch("http://localhost:3002/api/orders", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
+      return res.json();
+    })
+    .then((data) => {
+      console.log("Orders:", data);
+      setOrders(data.orders);
+      setLoading(false);
+    })
+    .catch((error) => {
+      console.error("Error fetching orders:", error);
+      setLoading(false);
+    });
 
   if (loading) {
     return <p>Loading orders...</p>;

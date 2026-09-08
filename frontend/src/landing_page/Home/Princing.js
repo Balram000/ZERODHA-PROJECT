@@ -10,7 +10,7 @@ const Pricing = () => {
         <h1 className='mb-3 text-3xl font-bold'> Unbeatable pricing</h1>
         <p> we pioneered the concept of discount broking and price transparency in India. Flat fees and no hidden char </p>
         <Link
-          to="/Pricing"
+          to="/Pricig"
           className="flex items-center gap-2 text-blue-600 font-semibold hover:text-blue-800 mt-6"
         >
           See pricing

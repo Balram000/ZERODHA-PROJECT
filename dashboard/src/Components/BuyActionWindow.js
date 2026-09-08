@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import axios from "axios";
 import "./BuyActionWindow.css";
@@ -7,13 +8,23 @@ const BuyActionWindow = ({ uid, mode, closeBuyWindow }) => {
   const [stockPrice, setStockPrice] = useState(0.0);
 
   const handleOrderClick = () => {
+    const token = localStorage.getItem("token");
+
     axios
-      .post("http://localhost:3002/orders", {
-        name: uid,
-        quantity: Number(stockQuantity),
-        price: Number(stockPrice),
-        mode: mode,
-      })
+      .post(
+        "http://localhost:3002/api/orders",
+        {
+          name: uid,
+          quantity: Number(stockQuantity),
+          price: Number(stockPrice),
+          mode: mode,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
       .then((response) => {
         console.log("Order placed:", response.data);
         closeBuyWindow();
@@ -61,9 +72,7 @@ const BuyActionWindow = ({ uid, mode, closeBuyWindow }) => {
       </div>
 
       <div className="buttons">
-        <span>
-          Margin required ₹140.65
-        </span>
+        <span>Margin required ₹140.65</span>
 
         <div>
           <button
@@ -90,3 +99,4 @@ const BuyActionWindow = ({ uid, mode, closeBuyWindow }) => {
 };
 
 export default BuyActionWindow;
+

@@ -1,10 +1,13 @@
+
 const express = require("express");
 const router = express.Router();
-const { OrderModel } = require("../Model/Ordermodel");
-const { holdingModel } = require('../Model/HoldingModel')
-//const authMiddleware = require("../middleware/authMiddleware");
 
-router.post("/",  async (req, res) => {
+const { OrderModel } = require("../Model/Ordermodel");
+const { holdingModel } = require("../Model/HoldingModel");
+const authMiddleware = require("../middleware/authMiddleware");
+
+// BUY / SELL ORDER
+router.post("/", authMiddleware, async (req, res) => {
   try {
     const { name, price, quantity, mode } = req.body;
 
@@ -22,6 +25,7 @@ router.post("/",  async (req, res) => {
 
     const qty = Number(quantity);
     const orderPrice = Number(price);
+    const userId = req.user.userId;
 
     if (qty <= 0 || orderPrice <= 0) {
       return res.status(400).json({
@@ -29,8 +33,12 @@ router.post("/",  async (req, res) => {
       });
     }
 
+    // ================= BUY =================
     if (mode === "BUY") {
-      const holding = await holdingModel.findOne({  userId: req.user.userId, name });
+      const holding = await holdingModel.findOne({
+        userId,
+        name,
+      });
 
       if (holding) {
         const oldQty = Number(holding.qty);
@@ -48,9 +56,9 @@ router.post("/",  async (req, res) => {
         await holding.save();
       } else {
         await holdingModel.create({
-         userId: req.user.userId,
-          name: name,
-          qty: qty,
+          userId,
+          name,
+          qty,
           avg: orderPrice,
           price: orderPrice,
           net: "0.00%",
@@ -59,8 +67,12 @@ router.post("/",  async (req, res) => {
       }
     }
 
+    // ================= SELL =================
     if (mode === "SELL") {
-      const holding = await holdingModel.findOne({  userId: req.user.userId, name });
+      const holding = await holdingModel.findOne({
+        userId,
+        name,
+      });
 
       if (!holding) {
         return res.status(400).json({
@@ -86,11 +98,13 @@ router.post("/",  async (req, res) => {
       }
     }
 
+    // ================= SAVE ORDER =================
     const newOrder = new OrderModel({
-      name: name,
+      userId,
+      name,
       price: orderPrice,
       quantity: qty,
-      mode: mode,
+      mode,
     });
 
     const savedOrder = await newOrder.save();
@@ -99,7 +113,6 @@ router.post("/",  async (req, res) => {
       message: "Order placed successfully",
       order: savedOrder,
     });
-
   } catch (error) {
     console.log("Order error:", error);
 
@@ -109,17 +122,42 @@ router.post("/",  async (req, res) => {
   }
 });
 
-router.get("/", async (req, res) => {
-    try {
-      const orders = await OrderModel.find({});
-  
-      res.json(orders);
-    } catch (error) {
-      console.log("Fetch orders error:", error);
-  
-      res.status(500).json({
-        message: "Failed to fetch orders",
-      });
-    }
-  });
-  module.exports = router;
+// ================= ALL ORDERS =================
+// Without login
+router.get("/allOrders", async (req, res) => {
+  try {
+    const orders = await OrderModel.find({});
+
+    res.status(200).json(orders);
+  } catch (error) {
+    console.log("Fetch all orders error:", error);
+
+    res.status(500).json({
+      message: "Failed to fetch all orders",
+    });
+  }
+});
+
+// ================= USER ORDERS =================
+// Login required
+router.get("/", authMiddleware, async (req, res) => {
+  try {
+    const orders = await OrderModel.find({
+      userId: req.user.userId,
+    });
+
+    res.status(200).json({
+      success: true,
+      orders,
+    });
+  } catch (error) {
+    console.log("Fetch user orders error:", error);
+
+    res.status(500).json({
+      message: "Failed to fetch orders",
+    });
+  }
+});
+
+module.exports = router;
+

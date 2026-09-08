@@ -5,45 +5,56 @@ const Holdings = () => {
   const [allHolding, setHolding] = useState([]);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3002/allHolding")
-      .then((res) => {
-        console.log("HOLDINGS:", res.data);
-        setHolding(res.data);
-      })
-      .catch((err) => {
-        console.log("Error fetching holdings:", err);
-      });
+    const token = localStorage.getItem("token");
+  
+    if (token) {
+      // Login hai
+      axios
+        .get("http://localhost:3002/api/holdings", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          console.log("USER HOLDINGS:", res.data);
+          setHolding(res.data.holdings);
+        })
+        .catch((err) => {
+          console.log("Error fetching user holdings:", err);
+        });
+    } else {
+      // Login nahi 
+      axios
+        .get("http://localhost:3002/api/allHolding")
+        .then((res) => {
+          console.log("ALL HOLDINGS:", res.data);
+          setHolding(res.data);
+        })
+        .catch((err) => {
+          console.log("Error fetching all holdings:", err);
+        });
+    }
   }, []);
 
-  // Total Investment
+
   const totalInvestment = allHolding.reduce(
-    (total, stock) =>
-      total + Number(stock.avg) * Number(stock.qty),
+    (sum, stock) => sum + stock.avg * stock.qty,
     0
   );
 
-  // Current Value
   const currentValue = allHolding.reduce(
-    (total, stock) =>
-      total + Number(stock.price) * Number(stock.qty),
+    (sum, stock) => sum + stock.price * stock.qty,
     0
   );
 
-  // Total P&L
   const totalPnL = currentValue - totalInvestment;
 
-  // P&L %
   const pnlPercentage =
-    totalInvestment > 0
-      ? (totalPnL / totalInvestment) * 100
-      : 0;
+    totalInvestment > 0 ? (totalPnL / totalInvestment) * 100 : 0;
 
   return (
     <>
-      <h3 className="title">
-        Holdings ({allHolding.length})
-      </h3>
+      <h3 className="title">Holdings ({allHolding.length})</h3>
 
       <div className="order-table">
         <table>
@@ -62,53 +73,27 @@ const Holdings = () => {
 
           <tbody>
             {allHolding.map((stock, index) => {
-              const curValue =
-                Number(stock.price) * Number(stock.qty);
-
-              const investment =
-                Number(stock.avg) * Number(stock.qty);
-
-              const profitLoss =
-                curValue - investment;
-
-              const isProfit = profitLoss >= 0;
-
-              const profitClass = isProfit
-                ? "profit"
-                : "loss";
-
-              const dayClass = stock.isLoss
-                ? "loss"
-                : "profit";
+              const pnl = (stock.price - stock.avg) * stock.qty;
 
               return (
                 <tr key={stock._id || index}>
                   <td>{stock.name}</td>
-
                   <td>{stock.qty}</td>
+                  <td>₹{stock.avg}</td>
+                  <td>₹{stock.price}</td>
+                  <td>₹{(stock.price * stock.qty).toFixed(2)}</td>
 
-                  <td>
-                    ₹{Number(stock.avg).toFixed(2)}
+                  <td className={pnl >= 0 ? "profit" : "loss"}>
+                    {pnl >= 0 ? "+" : ""}
+                    ₹{pnl.toFixed(2)}
                   </td>
 
-                  <td>
-                    ₹{Number(stock.price).toFixed(2)}
+                  <td className={stock.net >= 0 ? "profit" : "loss"}>
+                    {stock.net}%
                   </td>
 
-                  <td>
-                    ₹{curValue.toFixed(2)}
-                  </td>
-
-                  <td className={profitClass}>
-                    ₹{profitLoss.toFixed(2)}
-                  </td>
-
-                  <td className={profitClass}>
-                    {stock.net}
-                  </td>
-
-                  <td className={dayClass}>
-                    {stock.day}
+                  <td className={stock.day >= 0 ? "profit" : "loss"}>
+                    {stock.day}%
                   </td>
                 </tr>
               );
@@ -134,10 +119,12 @@ const Holdings = () => {
 
         <div className="col">
           <h5 className={totalPnL >= 0 ? "profit" : "loss"}>
-            ₹{totalPnL.toFixed(2)} (
-            {pnlPercentage.toFixed(2)}%)
+            {totalPnL >= 0 ? "+" : ""}
+            ₹{totalPnL.toFixed(2)}
           </h5>
-          <p>P&L</p>
+          <p>
+            P&L ({pnlPercentage.toFixed(2)}%)
+          </p>
         </div>
       </div>
     </>
