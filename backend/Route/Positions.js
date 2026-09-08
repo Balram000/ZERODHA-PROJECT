@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
-//const { PositionSchema } = require("./Schema/PositionSchema");
 const { positionModel } = require("../Model/PositionModel");
+const authMiddleware = require("../middleware/authMiddleware");
 
 
 
-router.get("/addposition", async (req, res) => {
+router.get("/addposition", authMiddleware, async (req, res) => {
   try {
     const position = [
       {
@@ -37,10 +37,22 @@ router.get("/addposition", async (req, res) => {
   }
 });
 
-
-router.get('/allPosition', async (req, res) => {
-    let allPosition = await positionModel.find({})
-    res.json(allPosition)
-  })
+router.get("/", authMiddleware, async (req, res) => {
+    try {
+      const positions = await positionModel.find({
+        userId: req.user.userId,
+      });
+  
+      res.status(200).json({
+        success: true,
+        positions,
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: "Failed to fetch positions",
+      });
+    }
+  });
 
 module.exports = router;

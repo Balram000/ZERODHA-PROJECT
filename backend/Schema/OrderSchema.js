@@ -19,7 +19,7 @@ const OrderSchema = new Schema(
       required: true,
     },
 
-    quantity: {
+    qty: {
       type: Number,
       required: true,
     },

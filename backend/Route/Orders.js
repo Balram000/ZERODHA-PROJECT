@@ -30,7 +30,7 @@ router.post("/", authMiddleware, async (req, res) => {
     }
 
     if (mode === "BUY") {
-      const holding = await holdingModel.findOne({ name });
+      const holding = await holdingModel.findOne({  userId: req.user.userId, name });
 
       if (holding) {
         const oldQty = Number(holding.qty);
@@ -48,6 +48,7 @@ router.post("/", authMiddleware, async (req, res) => {
         await holding.save();
       } else {
         await holdingModel.create({
+         userId: req.user.userId,
           name: name,
           qty: qty,
           avg: orderPrice,
@@ -59,7 +60,7 @@ router.post("/", authMiddleware, async (req, res) => {
     }
 
     if (mode === "SELL") {
-      const holding = await holdingModel.findOne({ name });
+      const holding = await holdingModel.findOne({  userId: req.user.userId, name });
 
       if (!holding) {
         return res.status(400).json({

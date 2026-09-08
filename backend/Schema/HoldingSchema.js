@@ -1,14 +1,48 @@
-const {Schema} = require('mongoose');
-const HoldingSchema = new Schema ({
-    
-        name: String,
-        qty: Number,
-        avg: Number,
-        price: Number,
-        net:  String,
-        day: String,
-      
- })
+const mongoose = require("mongoose");
 
+const holdingSchema = new mongoose.Schema(
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
 
-module.exports= {HoldingSchema}
+    name: {
+      type: String,
+      required: true,
+    },
+
+    qty: {
+      type: Number,
+      required: true,
+    },
+
+    avg: {
+      type: Number,
+      required: true,
+    },
+
+    price: {
+      type: Number,
+      required: true,
+    },
+
+    net: {
+      type: String,
+      required: true,
+    },
+
+    day: {
+      type: String,
+      required: true,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+const holdingModel = mongoose.model("Holding", holdingSchema);
+
+module.exports = { holdingModel };
