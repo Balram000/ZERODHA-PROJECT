@@ -2,8 +2,9 @@ const express = require("express");
 const router = express.Router();
 const { OrderModel } = require("../Model/Ordermodel");
 const { holdingModel } = require('../Model/HoldingModel')
+const authMiddleware = require("../middleware/authMiddleware");
 
-  router.post("/orders", async (req, res) => {
+router.post("/", authMiddleware, async (req, res) => {
   try {
     const { name, price, quantity, mode } = req.body;
 
@@ -107,7 +108,7 @@ const { holdingModel } = require('../Model/HoldingModel')
   }
 });
 
-router.get("/orders", async (req, res) => {
+router.get("/", authMiddleware, async (req, res) => {
     try {
       const orders = await OrderModel.find({});
   

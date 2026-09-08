@@ -16,7 +16,7 @@ const jwt = require("jsonwebtoken");
 
 
 
-  router.post( "/api/auth/register",
+  router.post( "/register",
     signupValidation,
     validate,
     async (req, res) => {
@@ -70,7 +70,7 @@ const jwt = require("jsonwebtoken");
     }
   });
 
-  router.post("/api/auth/login",
+  router.post("/login",
     loginValidation,
     validate,
     async (req, res) => {
