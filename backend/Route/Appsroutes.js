@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const App = require("../models/App");
+const App = require("../Model/Appmodel.js");
  
 // GET /api/apps
 router.get("/", async (req, res) => {
@@ -13,7 +13,7 @@ router.get("/", async (req, res) => {
 });
  
 // GET /api/apps/:id
-router.get("/:id", async (req, res) => {
+router.get("/id", async (req, res) => {
   try {
     const app = await App.findById(req.params.id);
     if (!app) {
@@ -45,7 +45,7 @@ router.post("/", async (req, res) => {
 });
  
 // PUT /api/apps/:id
-router.put("/:id", async (req, res) => {
+router.put("/id", async (req, res) => {
   try {
     const app = await App.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -61,7 +61,7 @@ router.put("/:id", async (req, res) => {
 });
  
 // DELETE /api/apps/:id
-router.delete("/:id", async (req, res) => {
+router.delete("/id", async (req, res) => {
   try {
     const app = await App.findByIdAndDelete(req.params.id);
     if (!app) {

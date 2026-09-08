@@ -11,11 +11,24 @@ const signupValidation = [
   body("email")
     .trim()
     .isEmail()
-    .withMessage("Enter a valid email"),
+    .withMessage("Enter a valid email")
+    .normalizeEmail(),
 
   body("password")
     .isLength({ min: 6 })
     .withMessage("Password must be at least 6 characters"),
+];
+
+const loginValidation = [
+  body("email")
+    .trim()
+    .isEmail()
+    .withMessage("Enter a valid email")
+    .normalizeEmail(),
+
+  body("password")
+    .notEmpty()
+    .withMessage("Password is required"),
 ];
 
 const validate = (req, res, next) => {
@@ -33,5 +46,6 @@ const validate = (req, res, next) => {
 
 module.exports = {
   signupValidation,
+  loginValidation,
   validate,
 };

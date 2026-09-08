@@ -1,338 +1,48 @@
 const express = require("express")
-const { holdingModel } = require('./Model/HoldingModel')
-const { positionModel } = require("./Model/PositionModel");
-const { appModel } = require("./Model/Appmodel.js");
+
+
+
 require('dotenv').config();
 const mongoose = require('mongoose');
-const { PositionSchema } = require("./Schema/PositionSchema");
-const PORT = process.env.PORT || 3002;
-const url = process.env.MONGODB_URL;
+
 const bodyparser = require('body-parser')
 const cors = require("cors")
-const { OrderModel } = require("./Model/Ordermodel");
+const authRoute = require("./Route/AuthRoute.js");
 
-const { UserModel } = require("./Model/UserModel");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-
-
+ const Postion = require("./Route/Positions.js");
+ const appsRoute = require("./Route/Appsroutes.js");
+ const orderRoute = require("./Route/Orders.js");
 const app = express();
 
 app.use(cors())
 
-
-
 app.use(bodyparser.json());
 
-app.get("/addposition", async (req, res) => {
-  try {
-    const position = [
-      {
-        product: "CNC",
-        name: "EVEREADY",
-        qty: 2,
-        avg: 316.27,
-        price: 312.35,
-        net: "+0.58%",
-        day: "-1.24%",
-      },
-      {
-        product: "CNC",
-        name: "JUBLFOOD",
-        qty: 1,
-        avg: 3124.75,
-        price: 3082.65,
-        net: "+10.04%",
-        day: "-1.35%",
-      },
-    ];
-
-    await positionModel.insertMany(position);
-
-    res.send("Positions added successfully");
-  } catch (error) {
-    console.log("Position error:", error);
-    res.status(500).send("Failed to add positions");
-  }
-});
+ 
+ app.use("/api/auth", authRoute);
 
 
-app.get('/allHolding', async (req, res) => {
-  let allHolding = await holdingModel.find({})
-  res.json(allHolding)
-})
+// positions
+app.use("/api/positions", Postion);
 
-app.get('/allPosition', async (req, res) => {
-  let allPosition = await positionModel.find({})
-  res.json(allPosition)
-})
-
-// =========================
 // APPS — seed + fetch
-// =========================
-app.get("/addapps", async (req, res) => {
-  try {
-    const apps = [
-      { name: "Console", tagline: "Your account, one dashboard", description: "Track holdings, funds, reports and account settings in a single backoffice view.", accent: "#5B6B79", tint: "#EEF1F3", initial: "C", order: 1 },
-      { name: "Coin", tagline: "Direct mutual funds", description: "Invest in direct mutual funds at zero commission and build long-term wealth.", accent: "#2E8B57", tint: "#EAF5EF", initial: "Co", order: 2 },
-      { name: "Kite", tagline: "Trading, simplified", description: "Fast, clean trading terminal for equity, F&O, currency and commodity markets.", accent: "#387ED1", tint: "#EAF2FB", initial: "K", order: 3 },
-      { name: "Varsity", tagline: "Learn the markets", description: "Free structured modules that take you from the basics to advanced trading.", accent: "#D97B29", tint: "#FBF1E7", initial: "V", order: 4 },
-      { name: "TradingView", tagline: "Advanced charting", description: "Professional-grade charts and technical analysis tools built into Kite.", accent: "#131722", tint: "#ECEDEF", initial: "T", order: 5 },
-    ];
 
-    await appModel.insertMany(apps);
-    res.send("Apps added successfully");
-  } catch (error) {
-    console.log("App seed error:", error);
-    res.status(500).send("Failed to add apps");
-  }
-});
+app.use("/api/apps", appsRoute);
 
-app.get("/allApps", async (req, res) => {
-  try {
-    let allApps = await appModel.find({}).sort({ order: 1 });
-    res.json(allApps);
-  } catch (error) {
-    console.log("Fetch apps error:", error);
-    res.status(500).json({ message: "Failed to fetch apps" });
-  }
-});
+//orders
+ 
+ app.use("/api/orders", orderRoute);
 
 
-app.post("/orders", async (req, res) => {
-  try {
-    const { name, price, quantity, mode } = req.body;
+ mongoose
+ .connect(process.env.MONGODB_URL)
+ .then(() => {
+   console.log("MongoDB connected");
 
-    if (!name || !price || !quantity || !mode) {
-      return res.status(400).json({
-        message: "All fields are required",
-      });
-    }
-
-    if (!["BUY", "SELL"].includes(mode)) {
-      return res.status(400).json({
-        message: "Mode must be BUY or SELL",
-      });
-    }
-
-    
-    app.post("/api/auth/register", async (req, res) => {
-      try {
-        const { name, email, password } = req.body;
-
-        if (!name || !email || !password) {
-          return res.status(400).json({
-            message: "Name, email and password are required",
-          });
-        }
-
-        if (password.length < 6) {
-          return res.status(400).json({
-            message: "Password must be at least 6 characters",
-          });
-        }
-
-        const existingUser = await UserModel.findOne({
-          email: email.toLowerCase(),
-        });
-
-        if (existingUser) {
-          return res.status(409).json({
-            message: "User already exists",
-          });
-        }
-
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        const user = await UserModel.create({
-          name,
-          email: email.toLowerCase(),
-          password: hashedPassword,
-        });
-
-        res.status(201).json({
-          message: "Registration successful",
-          user: {
-            id: user._id,
-            name: user.name,
-            email: user.email,
-          },
-        });
-      } catch (error) {
-        console.log("Register error:", error);
-
-        res.status(500).json({
-          message: "Registration failed",
-        });
-      }
-    });
-
-    app.post("/api/auth/login", async (req, res) => {
-      try {
-        const { email, password } = req.body;
-
-        if (!email || !password) {
-          return res.status(400).json({
-            message: "Email and password are required",
-          });
-        }
-
-        const user = await UserModel.findOne({
-          email: email.toLowerCase(),
-        });
-
-        if (!user) {
-          return res.status(401).json({
-            message: "Invalid email or password",
-          });
-        }
-
-        const isPasswordCorrect = await bcrypt.compare(
-          password,
-          user.password
-        );
-
-        if (!isPasswordCorrect) {
-          return res.status(401).json({
-            message: "Invalid email or password",
-          });
-        }
-
-        const token = jwt.sign(
-          {
-            userId: user._id,
-            email: user.email,
-          },
-          process.env.JWT_SECRET,
-          {
-            expiresIn: "7d",
-          }
-        );
-
-        res.json({
-          message: "Login successful",
-          token,
-          user: {
-            id: user._id,
-            name: user.name,
-            email: user.email,
-          },
-        });
-      } catch (error) {
-        console.log("Login error:", error);
-
-        res.status(500).json({
-          message: "Login failed",
-        });
-      }
-    });
-
-
-    const qty = Number(quantity);
-    const orderPrice = Number(price);
-
-    if (qty <= 0 || orderPrice <= 0) {
-      return res.status(400).json({
-        message: "Quantity and price must be greater than 0",
-      });
-    }
-
-    if (mode === "BUY") {
-      const holding = await holdingModel.findOne({ name });
-
-      if (holding) {
-        const oldQty = Number(holding.qty);
-        const oldAvg = Number(holding.avg);
-
-        const newQty = oldQty + qty;
-
-        const newAvg =
-          (oldAvg * oldQty + orderPrice * qty) / newQty;
-
-        holding.qty = newQty;
-        holding.avg = newAvg;
-        holding.price = orderPrice;
-
-        await holding.save();
-      } else {
-        await holdingModel.create({
-          name: name,
-          qty: qty,
-          avg: orderPrice,
-          price: orderPrice,
-          net: "0.00%",
-          day: "0.00%",
-        });
-      }
-    }
-
-    if (mode === "SELL") {
-      const holding = await holdingModel.findOne({ name });
-
-      if (!holding) {
-        return res.status(400).json({
-          message: `No holding found for ${name}`,
-        });
-      }
-
-      if (Number(holding.qty) < qty) {
-        return res.status(400).json({
-          message: `Not enough quantity. Available: ${holding.qty}`,
-        });
-      }
-
-      holding.qty = Number(holding.qty) - qty;
-      holding.price = orderPrice;
-
-      if (holding.qty === 0) {
-        await holdingModel.deleteOne({
-          _id: holding._id,
-        });
-      } else {
-        await holding.save();
-      }
-    }
-
-    const newOrder = new OrderModel({
-      name: name,
-      price: orderPrice,
-      quantity: qty,
-      mode: mode,
-    });
-
-    const savedOrder = await newOrder.save();
-
-    res.status(201).json({
-      message: "Order placed successfully",
-      order: savedOrder,
-    });
-
-  } catch (error) {
-    console.log("Order error:", error);
-
-    res.status(500).json({
-      message: "Failed to place order",
-    });
-  }
-});
-
-
-app.get("/orders", async (req, res) => {
-  try {
-    const orders = await OrderModel.find({});
-
-    res.json(orders);
-  } catch (error) {
-    console.log("Fetch orders error:", error);
-
-    res.status(500).json({
-      message: "Failed to fetch orders",
-    });
-  }
-});
-
-app.listen(PORT, () => {
-  console.log('app started ')
-  mongoose.connect(url)
-  console.log(' db conected')
-})
+   app.listen(process.env.PORT || 3002, () => {
+     console.log("Server started");
+   });
+ })
+ .catch((error) => {
+   console.error("MongoDB connection failed:", error);
+ });
