@@ -15,9 +15,11 @@ const { UserModel } = require("./Model/UserModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+
 const app = express();
 
 app.use(cors())
+
 
 
 app.use(bodyparser.json());
@@ -113,6 +115,7 @@ app.post("/orders", async (req, res) => {
       });
     }
 
+    
     app.post("/api/auth/register", async (req, res) => {
       try {
         const { name, email, password } = req.body;
