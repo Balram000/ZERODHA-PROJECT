@@ -1,5 +1,5 @@
 const { Schema } = require("mongoose");
-
+const mongoose = require("mongoose");
 const PositionSchema = new Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,

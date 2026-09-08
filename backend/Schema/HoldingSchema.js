@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-
-const holdingSchema = new mongoose.Schema(
+const { Schema } = require("mongoose");
+const holdingSchema = new Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
