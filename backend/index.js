@@ -11,6 +11,7 @@ const authRoute = require("./Route/AuthRoute.js");
  const appsRoute = require("./Route/Appsroutes.js");
  const orderRoute = require("./Route/Orders.js");
 const app = express();
+  const holding = require("./Route/Holdings.js");
 
 app.use(cors())
 
@@ -19,7 +20,7 @@ app.use(bodyparser.json());
  
  app.use("/api/auth", authRoute);
 
-
+app.use("/api/holdings", holding);
 // positions
 app.use("/api/positions", Postion);
 

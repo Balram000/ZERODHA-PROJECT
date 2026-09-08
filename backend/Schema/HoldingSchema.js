@@ -42,7 +42,5 @@ const holdingSchema = new Schema(
     timestamps: true,
   }
 );
-
-const holdingModel = mongoose.model("Holding", holdingSchema);
-
-module.exports = { holdingModel };
+        
+module.exports = { holdingSchema };

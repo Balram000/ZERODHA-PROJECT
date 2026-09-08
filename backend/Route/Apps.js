@@ -1,10 +1,11 @@
 
 const express = require("express");
 const router = express.Router();
+const authMiddleware = require("../middleware/authMiddleware");
 
 const { appModel } = require("./Model/Appmodel.js");
 
-router.get("/addapps", async (req, res) => {
+router.get("/addapps", authMiddleware, async (req, res) => {
     try {
       const apps = [
         { name: "Console", tagline: "Your account, one dashboard", description: "Track holdings, funds, reports and account settings in a single backoffice view.", accent: "#5B6B79", tint: "#EEF1F3", initial: "C", order: 1 },
@@ -22,7 +23,7 @@ router.get("/addapps", async (req, res) => {
     }
   });
   
-  router.get("/allApps", async (req, res) => {
+  router.get("/allApps", authMiddleware, async (req, res) => {
     try {
       let allApps = await appModel.find({}).sort({ order: 1 });
       res.json(allApps);
