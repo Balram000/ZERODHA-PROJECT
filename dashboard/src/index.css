@@ -944,3 +944,54 @@ hr {
 .action:hover {
   background-color: rgb(212, 212, 212);
 }
+
+.profile-section {
+  position: relative;
+}
+
+.profile {
+  cursor: pointer;
+}
+
+.profile-dropdown {
+  position: absolute;
+  right: 0;
+  top: 55px;
+
+  width: 180px;
+
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+
+  padding: 8px 0;
+
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+
+  z-index: 1000;
+}
+
+.profile-dropdown a,
+.profile-dropdown button {
+  display: block;
+  width: 100%;
+
+  padding: 10px 16px;
+
+  border: none;
+  background: transparent;
+
+  text-align: left;
+  text-decoration: none;
+
+  font-size: 14px;
+  color: #424242;
+
+  cursor: pointer;
+}
+
+.profile-dropdown a:hover,
+.profile-dropdown button:hover {
+  background: #f5f5f5;
+  color: #387ed1;
+}

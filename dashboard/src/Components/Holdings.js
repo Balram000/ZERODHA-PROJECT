@@ -10,14 +10,14 @@ const Holdings = () => {
     if (token) {
       // Login hai
       axios
-        .get("http://localhost:3002/api/holdings", {
+      .get("http://localhost:3002/api/userholding", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         })
         .then((res) => {
           console.log("USER HOLDINGS:", res.data);
-          setHolding(res.data.holdings);
+          setHolding(res.data);
         })
         .catch((err) => {
           console.log("Error fetching user holdings:", err);

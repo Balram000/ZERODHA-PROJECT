@@ -15,7 +15,7 @@ const BuyActionWindow = ({ uid, mode, closeBuyWindow }) => {
         "http://localhost:3002/api/orders",
         {
           name: uid,
-          quantity: Number(stockQuantity),
+          qty: Number(stockQuantity),
           price: Number(stockPrice),
           mode: mode,
         },
