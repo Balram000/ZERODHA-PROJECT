@@ -1,14 +1,15 @@
 const { Schema } = require("mongoose");
 const mongoose = require("mongoose");
+
 const OrderSchema = new Schema(
-  {
+  
+  {  
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true
+      required: true,
     },
-  },
-   {
+
     name: {
       type: String,
       required: true,

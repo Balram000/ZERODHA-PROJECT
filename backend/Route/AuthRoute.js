@@ -134,9 +134,11 @@ const jwt = require("jsonwebtoken");
   });
 
 
-  router.get("/api/auth/me", authMiddleware, async (req, res) => {
+  router.get("/me", authMiddleware, async (req, res) => {
     try {
-      const user = await UserModel.findById(req.user.userId).select("-password");
+      const user = await UserModel
+        .findById(req.user.userId)
+        .select("-password");
   
       if (!user) {
         return res.status(404).json({
@@ -150,6 +152,8 @@ const jwt = require("jsonwebtoken");
         user,
       });
     } catch (error) {
+      console.log("Get profile error:", error);
+  
       res.status(500).json({
         success: false,
         message: "Server error",

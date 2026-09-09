@@ -22,7 +22,7 @@ app.use(bodyparser.json());
 
 app.use("/api/", holding);
 // positions
-app.use("/api", Postion);
+app.use("/api/", Postion);
 
 // APPS — seed + fetch
 

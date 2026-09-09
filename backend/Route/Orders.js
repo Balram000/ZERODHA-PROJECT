@@ -9,9 +9,11 @@ const authMiddleware = require("../middleware/authMiddleware");
 // BUY / SELL ORDER
 router.post("/", authMiddleware, async (req, res) => {
   try {
-    const { name, price, quantity, mode } = req.body;
+    const { name, price, qty, mode } = req.body;
+    console.log("REQ BODY:", req.body);
+console.log("REQ USER:", req.user);
 
-    if (!name || !price || !quantity || !mode) {
+    if (!name || !price || !qty || !mode) {
       return res.status(400).json({
         message: "All fields are required",
       });
@@ -23,87 +25,95 @@ router.post("/", authMiddleware, async (req, res) => {
       });
     }
 
-    const qty = Number(quantity);
+    const qtys = Number(qty);
     const orderPrice = Number(price);
     const userId = req.user.userId;
 
-    if (qty <= 0 || orderPrice <= 0) {
+    if (qtys <= 0 || orderPrice <= 0) {
       return res.status(400).json({
         message: "Quantity and price must be greater than 0",
       });
     }
 
-    // ================= BUY =================
+    // BUY 
     if (mode === "BUY") {
       const holding = await holdingModel.findOne({
         userId,
         name,
       });
-
+    
       if (holding) {
         const oldQty = Number(holding.qty);
         const oldAvg = Number(holding.avg);
-
-        const newQty = oldQty + qty;
-
+    
+        const newQty = oldQty + qtys;
+    
         const newAvg =
-          (oldAvg * oldQty + orderPrice * qty) / newQty;
-
+          (oldAvg * oldQty + orderPrice * qtys) / newQty;
+    
         holding.qty = newQty;
         holding.avg = newAvg;
         holding.price = orderPrice;
-
+    
         await holding.save();
+    
+        console.log("HOLDING UPDATED:", holding);
       } else {
-        await holdingModel.create({
+        const newHolding = await holdingModel.create({
           userId,
           name,
-          qty,
+          qty: qtys,
           avg: orderPrice,
           price: orderPrice,
           net: "0.00%",
           day: "0.00%",
         });
+    
+        console.log("HOLDING CREATED:", newHolding);
       }
     }
 
-    // ================= SELL =================
+    // SELL 
     if (mode === "SELL") {
       const holding = await holdingModel.findOne({
         userId,
         name,
       });
-
+    
       if (!holding) {
         return res.status(400).json({
           message: `No holding found for ${name}`,
         });
       }
-
-      if (Number(holding.qty) < qty) {
+    
+      if (Number(holding.qty) < qtys) {
         return res.status(400).json({
           message: `Not enough quantity. Available: ${holding.qty}`,
         });
       }
-
-      holding.qty = Number(holding.qty) - qty;
+    
+      holding.qty = Number(holding.qty) - qtys;
       holding.price = orderPrice;
-
+    
       if (holding.qty === 0) {
         await holdingModel.deleteOne({
           _id: holding._id,
         });
+    
+        console.log("HOLDING DELETED:", name);
       } else {
         await holding.save();
+    
+        console.log("HOLDING AFTER SELL:", holding);
       }
     }
 
-    // ================= SAVE ORDER =================
+    //  SAVE ORDER 
     const newOrder = new OrderModel({
       userId,
       name,
       price: orderPrice,
-      quantity: qty,
+      qty: qtys,
       mode,
     });
 
@@ -122,7 +132,7 @@ router.post("/", authMiddleware, async (req, res) => {
   }
 });
 
-// ================= ALL ORDERS =================
+//  ALL ORDERS 
 // Without login
 router.get("/allOrders", async (req, res) => {
   try {
