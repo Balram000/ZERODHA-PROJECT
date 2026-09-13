@@ -32,6 +32,12 @@ app.use("/api/apps", appsRoute);
  
  app.use("/api/orders", orderRoute);
 
+ app.get("/", (req, res) => {
+  res.json({
+    success: true,
+    message: "Zerodha Backend is running in Docker"
+  });
+});
 
  mongoose
  .connect(process.env.MONGODB_URL)
