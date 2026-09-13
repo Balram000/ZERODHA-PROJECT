@@ -27,7 +27,7 @@ function Hero() {
           </p>
         </div>
         <div className="w-1/3 p-4">
-          <img src="images/pricingEquity.svg " alt="pricing" />
+          <img src="Images\pricingEquity.svg" alt="pricing" />
           <h1 className="fs-3">Free direct MF</h1>
           <p className="text-muted">
             All direct mutual fund investments are absolutely free — ₹ 0
