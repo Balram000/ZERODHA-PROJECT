@@ -13,7 +13,14 @@ const authRoute = require("./Route/AuthRoute.js");
 const app = express();
   const holding = require("./Route/Holdings.js");
 
-app.use(cors())
+  app.use(
+    cors({
+      origin: [
+        process.env.FRONTEND_URL,
+        process.env.DASHBOARD_URL,
+      ],
+    })
+  );
 
 app.use(bodyparser.json());
 
