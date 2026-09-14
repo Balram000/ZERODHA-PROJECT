@@ -27,7 +27,7 @@ const Login = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:3002/api/auth/login",
+        "/api/auth/login",
         {
           method: "POST",
           headers: {
@@ -52,7 +52,7 @@ const Login = () => {
       setMessage("Login successful!");
 
       setTimeout(() => {
-        window.location.href = `http://localhost:3001?token=${data.token}`;
+        window.location.href = `/dashboard/`;
       }, 700);
     } catch (error) {
       setMessage(error.message);
