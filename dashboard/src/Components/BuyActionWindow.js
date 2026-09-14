@@ -12,7 +12,7 @@ const BuyActionWindow = ({ uid, mode, closeBuyWindow }) => {
 
     axios
       .post(
-        "http://localhost:3002/api/orders",
+        "/api/orders",
         {
           name: uid,
           qty: Number(stockQuantity),

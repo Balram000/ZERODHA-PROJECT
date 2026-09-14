@@ -7,7 +7,7 @@ const Orders = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    fetch("http://localhost:3002/api/orders", {
+    fetch("/api/orders", {
       headers: {
         Authorization: `Bearer ${token}`,
       },

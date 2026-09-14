@@ -10,7 +10,7 @@ const Holdings = () => {
     if (token) {
       // Login hai
       axios
-      .get("http://localhost:3002/api/userholding", {
+      .get("/api/userholding", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -25,7 +25,7 @@ const Holdings = () => {
     } else {
       // Login nahi 
       axios
-        .get("http://localhost:3002/api/allHolding")
+        .get("/api/allHolding")
         .then((res) => {
           console.log("ALL HOLDINGS:", res.data);
           setHolding(res.data);
