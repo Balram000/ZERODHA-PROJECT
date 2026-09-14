@@ -1,0 +1,155 @@
+# 📈 Zerodha Clone — MERN Stack Trading Platform
+
+A full-stack **Zerodha-inspired trading platform** built using the MERN stack.
+
+This project demonstrates a complete modern web application with authentication, stock watchlist, orders, holdings, positions, REST APIs, MongoDB, Docker containerization, Nginx reverse proxy, and AWS EC2 deployment.
+
+> ⚠️ This is an educational/project implementation inspired by Zerodha. It is not affiliated with or operated by Zerodha.
+
+---
+
+## 🚀 Live Demo
+
+🌐 **Live Application**
+
+http://16.192.193.235/
+
+### Application Routes
+
+- Landing Page: `/`
+- Dashboard: `/dashboard/`
+- Backend Health: `/api/...`
+
+> Current deployment uses an AWS EC2 public IP. Custom domain and HTTPS/SSL are planned next.
+
+---
+
+# ✨ Features
+
+## 🔐 Authentication
+
+- User Registration
+- User Login
+- JWT Authentication
+- Protected API Routes
+- Authentication Middleware
+- `/api/auth/me`
+- Password validation
+- User-specific data access
+
+## 📊 Trading Dashboard
+
+- Watchlist
+- Holdings
+- Positions
+- Orders
+- Funds
+- Profile
+- Buy/Sell interface
+
+## 📦 Orders
+
+- Create BUY orders
+- Create SELL orders
+- Quantity handling
+- Order status
+- User-specific orders
+- REST API integration
+
+## 💼 Holdings
+
+- Stock holdings
+- Quantity
+- Average price
+- Current price
+- Investment value
+- Current value
+- Profit/Loss
+
+## 📈 Positions
+
+- Position tracking
+- BUY/SELL information
+- Quantity
+- Price information
+
+## 👤 User Data
+
+Authenticated users can access their own:
+
+- Orders
+- Holdings
+- Positions
+- Profile information
+
+---
+
+# 🛠️ Tech Stack
+
+## Frontend
+
+- React.js
+- React Router
+- Context API
+- JavaScript
+- HTML5
+- CSS3
+- Axios / Fetch API
+- Bootstrap / Tailwind CSS
+
+## Backend
+
+- Node.js
+- Express.js
+- REST API
+- JWT
+- Middleware
+- Express Validator
+- CORS
+
+## Database
+
+- MongoDB
+- MongoDB Atlas
+- Mongoose
+
+## DevOps / Deployment
+
+- Docker
+- Docker Compose
+- Nginx
+- AWS EC2
+- Ubuntu Linux
+- Git
+- GitHub
+
+---
+
+# 🏗️ Project Architecture
+
+```text
+                         Internet
+                            │
+                            ▼
+                    ┌───────────────┐
+                    │   AWS EC2     │
+                    │ Ubuntu Server │
+                    └───────┬───────┘
+                            │
+                            ▼
+                    ┌───────────────┐
+                    │    Nginx      │
+                    │ Reverse Proxy │
+                    └───────┬───────┘
+                            │
+             ┌──────────────┼──────────────┐
+             │              │              │
+             ▼              ▼              ▼
+        Frontend       Dashboard       Backend
+        Container      Container       Container
+             │              │              │
+             │              │              ▼
+             │              │        MongoDB Atlas
+             │              │
+             └──────────────┴──────────────
+                       Browser
